@@ -1,0 +1,23 @@
+// ═══════════════════════════════════════════════════
+// 🛒 shop/ — Prisma schema
+// ═══════════════════════════════════════════════════
+// Phase 1 ships ONLY the generator + datasource.
+// All models (User, Product, Order, etc.) land in Phase 2.
+//
+// Deployment notes (from the Lumière lessons):
+//   • prisma-client-js — NOT the newer `prisma-client` generator.
+//     Outputs to node_modules and is bundled correctly on Vercel.
+//   • binaryTargets — native (dev) + rhel-openssl-3.0.x (Vercel).
+//   • DATABASE_URL is the runtime connection (direct endpoint on Neon).
+//   • DIRECT_URL is used only by `prisma migrate`.
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}

@@ -1,0 +1,1800 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.husky/
+  pre-commit
+prisma/
+  schema.prisma
+public/
+  portfolio/
+    phase-01-scaffold-and-audit.html
+  products/
+    .gitkeep
+  file.svg
+  globe.svg
+  next.svg
+  vercel.svg
+  window.svg
+scripts/
+  generate-local-images.ts
+src/
+  app/
+    favicon.ico
+    globals.css
+    layout.tsx
+    page.tsx
+  lib/
+    prisma.ts
+.gitignore
+.prettierignore
+.prettierrc
+eslint.config.mjs
+lint-staged.config.mjs
+next.config.ts
+package.json
+prisma.config.ts
+README.md
+repomix-output.txt
+tsconfig.json
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path=".husky/pre-commit">
+npx lint-staged
+</file>
+
+<file path="prisma/schema.prisma">
+// ═══════════════════════════════════════════════════
+// 🛒 shop/ — Prisma schema
+// ═══════════════════════════════════════════════════
+// Phase 1 ships ONLY the generator + datasource.
+// All models (User, Product, Order, etc.) land in Phase 2.
+//
+// Deployment notes (from the Lumière lessons):
+//   • prisma-client-js — NOT the newer `prisma-client` generator.
+//     Outputs to node_modules and is bundled correctly on Vercel.
+//   • binaryTargets — native (dev) + rhel-openssl-3.0.x (Vercel).
+//   • DATABASE_URL is the runtime connection (direct endpoint on Neon).
+//   • DIRECT_URL is used only by `prisma migrate`.
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+</file>
+
+<file path="public/portfolio/phase-01-scaffold-and-audit.html">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 1 — Audit & Scaffold · Shop Project</title>
+<style>
+:root {
+  --bg:#faf7f2; --bg-card:#ffffff; --bg-dark:#1a1a1a; --bg-code:#1e1e1e;
+  --fg:#1a1a1a; --fg-muted:#6b6b6b; --border:#e5ddd0;
+  --accent:#c9a961; --accent-dark:#a88847; --accent-light:#f5ecd9;
+  --danger:#c0392b; --success:#27ae60; --warning:#e67e22; --info:#2e6fc0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6;font-size:15px}
+.layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+.sidebar{background:var(--bg-dark);color:#fff;padding:2rem 1.5rem;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar h1{font-size:1.5rem;color:var(--accent);margin-bottom:.25rem;letter-spacing:1px}
+.sidebar .subtitle{font-size:.7rem;color:rgba(255,255,255,.5);margin-bottom:2rem;text-transform:uppercase;letter-spacing:1.5px}
+.sidebar nav{display:flex;flex-direction:column;gap:.15rem}
+.sidebar nav a{color:rgba(255,255,255,.7);text-decoration:none;padding:.5rem .75rem;border-radius:6px;font-size:.85rem;transition:all .15s}
+.sidebar nav a:hover{background:rgba(201,169,97,.15);color:var(--accent)}
+.sidebar .phase-badge{display:inline-block;background:var(--accent);color:var(--bg-dark);font-size:.7rem;font-weight:700;padding:.25rem .6rem;border-radius:4px;margin-bottom:1rem;letter-spacing:1px}
+.hero{padding:4rem 3rem 3rem;background:linear-gradient(180deg,var(--bg-card) 0%,var(--bg) 100%);border-bottom:1px solid var(--border)}
+.hero .kicker{color:var(--accent-dark);font-size:.75rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:.75rem}
+.hero h1{font-size:2.5rem;line-height:1.2;margin-bottom:1rem;font-weight:700}
+.hero .lede{font-size:1.05rem;color:var(--fg-muted);max-width:720px;margin-bottom:1.5rem}
+.hero .stack{display:flex;flex-wrap:wrap;gap:.5rem}
+.hero .stack span{background:var(--accent-light);color:var(--accent-dark);font-size:.75rem;font-weight:600;padding:.35rem .75rem;border-radius:999px}
+section{padding:3rem;border-bottom:1px solid var(--border);max-width:1000px}
+section h2{font-size:1.5rem;margin-bottom:.75rem;display:flex;align-items:center;gap:.75rem}
+section h2 .num{background:var(--accent);color:#fff;font-size:.85rem;width:32px;height:32px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+section h3{font-size:1.1rem;margin:1.5rem 0 .5rem}
+section p{margin-bottom:1rem;color:#333}
+pre{background:var(--bg-code);color:#e8e8e8;padding:1rem 1.25rem;border-radius:8px;overflow-x:auto;font-family:'Consolas','Monaco',monospace;font-size:.82rem;line-height:1.55;margin:1rem 0;border-left:3px solid var(--accent)}
+code{font-family:'Consolas','Monaco',monospace;font-size:.88em;background:rgba(201,169,97,.12);color:var(--accent-dark);padding:.15em .4em;border-radius:4px}
+pre code{background:none;color:inherit;padding:0;font-size:1em}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.88rem;background:var(--bg-card);border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+th{background:var(--bg);text-align:left;padding:.75rem 1rem;font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--fg-muted);font-weight:600;border-bottom:1px solid var(--border)}
+td{padding:.75rem 1rem;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.callout{padding:1rem 1.25rem;border-radius:8px;margin:1rem 0;border-left:4px solid var(--accent);background:var(--accent-light);font-size:.9rem}
+.callout.warn{border-left-color:var(--warning);background:#fef5e7}
+.callout.danger{border-left-color:var(--danger);background:#fdecea}
+.callout.success{border-left-color:var(--success);background:#eaf7ef}
+.callout.info{border-left-color:var(--info);background:#eaf0fa}
+.callout strong{display:block;margin-bottom:.25rem}
+.footer-nav{padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;background:var(--bg-dark);color:#fff;font-size:.85rem}
+.footer-nav a{color:var(--accent);text-decoration:none}
+.footer-nav .disabled{opacity:.35}
+.footer-nav .center{color:rgba(255,255,255,.5);font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase}
+ul,ol{margin:.75rem 0 1rem 1.5rem}
+li{margin-bottom:.4rem}
+.filetree{background:var(--bg-code);color:#e8e8e8;padding:1.25rem 1.5rem;border-radius:8px;font-family:'Consolas',monospace;font-size:.82rem;line-height:1.7;border-left:3px solid var(--accent);margin:1rem 0}
+.filetree .dir{color:#7cb4e8;font-weight:600}
+.filetree .file{color:#e8e8e8}
+.filetree .new{color:#7ee787;font-weight:600}
+.filetree .note{color:#f0883e;font-style:italic}
+.filetree .indent-1{padding-left:1.25rem}
+.filetree .indent-2{padding-left:2.5rem}
+.filetree .indent-3{padding-left:3.75rem}
+.badge{display:inline-block;font-size:.7rem;font-weight:700;padding:.15rem .5rem;border-radius:4px;letter-spacing:.5px;vertical-align:middle;margin-left:.4rem}
+.badge.crit{background:rgba(192,57,43,.12);color:#8f1e0e}
+.badge.sec{background:rgba(230,126,34,.14);color:#a05a17}
+.badge.log{background:rgba(46,111,192,.14);color:#1a3d75}
+.badge.data{background:rgba(39,174,96,.14);color:#1e5a3a}
+.badge.verified{background:rgba(39,174,96,.18);color:#1e5a3a}
+@media (max-width:900px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.hero,section{padding:2rem 1.5rem}}
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <aside class="sidebar">
+    <span class="phase-badge">PHASE 01</span>
+    <h1>Shop</h1>
+    <p class="subtitle">MERN → Next.js 16</p>
+    <nav>
+      <a href="#overview">Overview</a>
+      <a href="#strategy">Audit Strategy</a>
+      <a href="#critical">CRITICAL Bugs</a>
+      <a href="#security">SECURITY Bugs</a>
+      <a href="#logic">LOGIC Bugs</a>
+      <a href="#extra">Additional Findings</a>
+      <a href="#decision">Architectural Decisions</a>
+      <a href="#stack">Stack &amp; Tooling</a>
+      <a href="#scaffold">Scaffolding Steps</a>
+      <a href="#structure">Folder Structure</a>
+      <a href="#config">Config Files</a>
+      <a href="#gotchas">Preempted Gotchas</a>
+      <a href="#verify">Verification</a>
+      <a href="#summary">Summary</a>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="hero">
+      <div class="kicker">Phase 01 · Audit &amp; Scaffolding</div>
+      <h1>Legacy Audit &amp; the shop/ Foundation</h1>
+      <p class="lede">Verify every bug in the legacy MERN storefront against the real source code, then establish a clean Next.js 16 + Prisma 6 + Neon scaffold in a sibling <code>shop/</code> folder. The legacy <code>front/</code>, <code>admin/</code>, <code>back/</code> trees remain untouched as reference — the new app is a separate git repository.</p>
+      <div class="stack">
+        <span>Legacy Audit</span><span>16+ Bugs</span><span>Next.js 16</span>
+        <span>Prisma 6</span><span>Neon</span><span>Webpack</span>
+        <span>Husky · Prettier · ESLint</span>
+      </div>
+    </header>
+
+    <section id="overview">
+      <h2><span class="num">1</span> Overview</h2>
+      <p><strong>Goal.</strong> Before writing a single line of new code, prove every claim in the bug inventory against the actual source files. Then stand up <code>shop/</code> with the same production patterns proven in the earlier Lumière project — no regressions, no re-litigating decisions.</p>
+      <h3>Deliverables</h3>
+      <ol>
+        <li>A verified bug table — every inventory item, checked against the source, with file:line evidence.</li>
+        <li>A second look for bugs the original audit missed.</li>
+        <li>A scaffolded <code>shop/</code>: Next.js 16, TypeScript, Tailwind 4, Prisma 6, ESLint, Prettier, Husky.</li>
+        <li>Working <code>prisma validate</code> and <code>prisma generate</code> against a Neon connection.</li>
+        <li>A green <code>npm run build</code> with <code>PrismaPlugin</code> active.</li>
+        <li>The Lumière deployment gotchas baked in from day one — <code>prisma-client-js</code>, <code>binaryTargets</code>, <code>--webpack</code>, direct Neon endpoint.</li>
+      </ol>
+    </section>
+
+    <section id="strategy">
+      <h2><span class="num">2</span> Audit Strategy</h2>
+      <p>The legacy codebase is 40+ files across three Vite/CRA-style apps. Every bug listed in the brief was re-read against the actual source — no assumptions, no <em>“probably still true.”</em> Where the brief's summary was imprecise, I corrected it in the table.</p>
+      <div class="callout info">
+        <strong>Rule followed</strong>
+        If the audit disagrees with the brief, the audit wins — and the difference is documented. Fixing a bug that was already fixed would be wasted work; missing one that's still live would be worse.
+      </div>
+      <p>The inventory was split into four categories:</p>
+      <table>
+        <thead><tr><th>Category</th><th>Count</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge crit">CRITICAL</span></td><td>3</td><td>Page crash or guaranteed dead UI</td></tr>
+          <tr><td><span class="badge sec">SECURITY</span></td><td>4</td><td>Authentication bypass, credential leak, path traversal</td></tr>
+          <tr><td><span class="badge log">LOGIC</span></td><td>9</td><td>Silent state desync, missing validation, missing webhook</td></tr>
+          <tr><td><span class="badge data">DATA</span></td><td>2</td><td>Extra findings from the audit pass</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="critical">
+      <h2><span class="num">3</span> CRITICAL Bugs — Verified</h2>
+
+      <h3>#1 — <code>all_products</code> imported from a commented-out export</h3>
+      <table>
+        <thead><tr><th>File</th><th>Evidence</th></tr></thead>
+        <tbody>
+          <tr><td><code>front/src/assets/data.js</code></td><td>The export block is entirely commented out starting at the banner <code>// export const all_products = [...]</code>. Only <code>categories</code> is live.</td></tr>
+          <tr><td><code>front/src/components/Categories.jsx</code></td><td><code>import { categories, all_products } from "../assets/data"</code> — the second name is undefined at runtime.</td></tr>
+          <tr><td><code>front/src/components/Offer.jsx</code></td><td>Same import. Then <code>all_products.slice(0, 12)</code> — a TypeError on load.</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Verdict:</strong> confirmed live. Both routes crash with <code>Cannot read properties of undefined (reading 'slice')</code>.</p>
+      <div class="callout danger">
+        <strong>Root cause</strong>
+        Two sources of truth — the API in <code>ShopContext</code> and the static <code>data.js</code> — were patched at different times. Deleting the static source without updating its consumers broke them silently.
+      </div>
+
+      <h3>#2 — Admin order list always empty</h3>
+      <table>
+        <thead><tr><th>Side</th><th>Code</th></tr></thead>
+        <tbody>
+          <tr><td>Frontend reads</td><td><code>admin/src/components/Orders.jsx</code> → <code>setOrders(res.data.orders.reverse())</code></td></tr>
+          <tr><td>Backend returns</td><td><code>back/controllers/orderController.js</code> → <code>res.json({ success: true, data: orders })</code></td></tr>
+        </tbody>
+      </table>
+      <p><strong>Verdict:</strong> confirmed. <code>res.data.orders</code> is <code>undefined</code> → <code>.reverse()</code> throws inside the try/catch, the catch logs and swallows, and the UI is left empty with a red toast.</p>
+
+      <h3>#3 — Three placeholder components shipping dead code</h3>
+      <table>
+        <thead><tr><th>File</th><th>Body</th></tr></thead>
+        <tbody>
+          <tr><td><code>front/src/components/Navbar.jsx</code></td><td><code>return &lt;div&gt;Navbar&lt;/div&gt;</code></td></tr>
+          <tr><td><code>front/src/components/Item.jsx</code></td><td><code>return &lt;div&gt;Item&lt;/div&gt;</code></td></tr>
+          <tr><td><code>front/src/components/ProductDisplay.jsx</code></td><td><code>return &lt;div&gt;ProductDisplay&lt;/div&gt;</code></td></tr>
+        </tbody>
+      </table>
+      <p><strong>Verdict:</strong> confirmed. All three are <code>memo()</code>-wrapped single-line stubs. Nothing imports them — they exist as dead code. Decision recorded in Phase 4: <strong>delete</strong>, don't implement. Their intended responsibilities are already covered by <code>Header.jsx</code>, <code>Categories.jsx</code>, and <code>Product.jsx</code>.</p>
+    </section>
+
+    <section id="security">
+      <h2><span class="num">4</span> SECURITY Bugs — Verified</h2>
+
+      <h3>#4 — Admin login bypasses the backend entirely</h3>
+      <pre><code>// admin/src/components/AdminLogin.jsx
+if (formData.email === "admin@gmail.com" &&
+    formData.password === "123456") {
+  localStorage.setItem("admin", "true");
+  navigate("/admin/add");
+}</code></pre>
+      <p><strong>Verdict:</strong> confirmed. Any visitor reading the bundled JS sees the credentials. The backend <code>adminLogin</code> controller exists but is never called.</p>
+
+      <h3>#5 — ProtectedRoute checks a key nothing writes</h3>
+      <pre><code>// admin/src/components/ProtectedRoute.jsx
+const token = localStorage.getItem("adminToken");
+if (!token) return &lt;Navigate to="/admin/login" replace /&gt;;</code></pre>
+      <p><strong>Verdict:</strong> confirmed. A repo-wide grep for <code>setItem("adminToken"</code> returns nothing in <code>admin/src/</code>. Login stores <code>"admin"</code>, not <code>"adminToken"</code>. The proper flow is unreachable.</p>
+
+      <h3>#6 — Public <code>setupFirstAdmin</code> endpoint</h3>
+      <pre><code>// back/routes/adminRoutes.js
+adminRouter.post("/setup", setupFirstAdmin);  // no middleware
+
+// back/controllers/adminController.js
+const existingAdmin = await userModel.findOne({ isAdmin: true });
+if (existingAdmin) return res.json({ success: false, ... });
+// ...else create a new admin with attacker-supplied credentials</code></pre>
+      <p><strong>Verdict:</strong> confirmed. On a fresh database, the first caller to hit <code>POST /api/admin/setup</code> becomes the admin. The endpoint never gets deleted because the developer forgets.</p>
+
+      <h3>#7 — Committed <code>.env</code> files, including Stripe keys</h3>
+      <table>
+        <thead><tr><th>File</th><th>Committed secret</th></tr></thead>
+        <tbody>
+          <tr><td><code>back/.env</code></td><td><code>MONGO_URL</code>, <code>JWT_SECRET</code>, <code>STRIPE_SECRET_KEY</code></td></tr>
+          <tr><td><code>front/.env</code></td><td><code>VITE_STRIPE_PK</code> (publishable — lower risk, but still)</td></tr>
+          <tr><td><code>admin/.env</code></td><td><code>VITE_API_URL</code> (harmless)</td></tr>
+        </tbody>
+      </table>
+      <p>Both <code>.gitignore</code> files contain <code>*.local</code> but <strong>not</strong> <code>.env</code>. Confirmed by direct inspection of the <code>.gitignore</code> contents.</p>
+      <div class="callout danger">
+        <strong>Phase 10 action item</strong>
+        Rotate the legacy <code>JWT_SECRET</code> and <code>STRIPE_SECRET_KEY</code> even though <code>shop/</code> is a fresh repo — the old keys remain in the legacy git history and are public if that repository is ever pushed.
+      </div>
+
+      <h3>#14 — Multer accepts anything, no filename sanitization</h3>
+      <pre><code>// back/routes/productRoutes.js
+const storage = multer.diskStorage({
+  destination: "uploads",
+  filename: (req, file, cb) =>
+    cb(null, `${Date.now()}-${file.originalname}`),
+});
+const upload = multer({ storage });  // no fileFilter, no limits</code></pre>
+      <p><strong>Verdict:</strong> confirmed. No <code>fileFilter</code> (accepts <code>.exe</code>, <code>.html</code>, <code>.svg</code> — stored as-is, served back from <code>/images/*</code>). No <code>limits</code> (unbounded size). The filename is trusted verbatim — a crafted <code>originalname</code> like <code>..%2F..%2Fetc%2Fpasswd</code> can escape the <code>uploads/</code> directory depending on OS behavior.</p>
+    </section>
+
+    <section id="logic">
+      <h2><span class="num">5</span> LOGIC Bugs — Verified</h2>
+
+      <h3>#8 — Two sources of truth for products</h3>
+      <p><code>ShopContext.jsx</code> fetches from <code>/api/product/list</code> on mount. But <code>Categories.jsx</code> and <code>Offer.jsx</code> import <code>all_products</code> directly from <code>data.js</code>. The two systems were never reconciled — that's how #1 slipped through.</p>
+      <p><strong>Verdict:</strong> confirmed.</p>
+
+      <h3>#9 — <code>getTotalCartAmount</code> briefly returns <code>$0</code></h3>
+      <pre><code>// front/src/context/ShopContext.jsx
+const getTotalCartAmount = () => {
+  return Object.entries(cartItems).reduce((total, [id, qty]) => {
+    const product = all_products.find((p) =&gt; p._id === id)
+    return total + (product ? product.price * qty : 0)
+  }, 0)
+}</code></pre>
+      <p>On page load, <code>all_products</code> is <code>[]</code> until the fetch resolves. During that window, every lookup returns <code>undefined</code>, the guard collapses to <code>0</code>, and the total is silently <code>$0</code> even for a full cart.</p>
+      <p><strong>Verdict:</strong> confirmed. The guard prevents NaN, but the transient <code>$0</code> is a real UX bug.</p>
+
+      <h3>#10 — Orphaned cart keys after product deletion</h3>
+      <p>The current <code>getTotalCartAmount</code> <em>does</em> guard with <code>product ? ... : 0</code>, so NaN doesn't occur — the brief's description is slightly stronger than reality. But the orphaned key still lives in <code>cartItems</code> forever, and the legacy <code>Cart.jsx</code> silently filters it out. That means a user can see a cart line disappear without explanation.</p>
+      <p><strong>Verdict:</strong> partially confirmed — no NaN, but still orphaned-key state.</p>
+
+      <h3>#11 — <code>removeFromCart</code> ignores backend failure</h3>
+      <pre><code>const removeFromCart = async (id, removeAll = false) =&gt; {
+  setCartItems((prev) =&gt; { /* optimistic update */ });
+  if (token) {
+    try {
+      await axios.post(`${API_URL}/api/cart/remove`, { id }, { headers: { token } });
+    } catch (err) {
+      console.log("Cart remove error:", err);   // ← swallowed
+    }
+  }
+}</code></pre>
+      <p><strong>Verdict:</strong> confirmed. Optimistic removal stays in the UI; the server keeps the item. Next page reload re-syncs from the backend and the item reappears — the user's click appears to have done nothing.</p>
+
+      <h3>#12 — No JWT expiry handling</h3>
+      <pre><code>// back/middleware/auth.js
+try {
+  const token_decode = jwt.verify(token, process.env.JWT_SECRET);
+  req.userId = token_decode.id;
+  next();
+} catch (err) {
+  res.json({ success: false, message: err.message });  // raw JWT error
+}</code></pre>
+      <p>The token lives 7 days. After expiry, <code>jwt.verify</code> throws <code>TokenExpiredError</code>, the middleware returns it verbatim, and no client code distinguishes expiry from “not logged in.” The user is stuck with a stale token in <code>localStorage</code> forever.</p>
+      <p><strong>Verdict:</strong> confirmed.</p>
+
+      <h3>#13 — No stock check at order time</h3>
+      <p><code>placeOrder</code> reads <code>req.body.items</code>, builds a Stripe session, and persists the order — but <code>back/models/productModel.js</code> has no <code>stock</code> field at all. There is nothing to check.</p>
+      <p><strong>Verdict:</strong> confirmed. Stock tracking has to be introduced as a new capability, not fixed as a bug.</p>
+
+      <h3>#15 — No duplicate slug/name check on products</h3>
+      <p><code>addProduct</code> inserts unconditionally. There is no unique index on <code>name</code> in the schema and no pre-insert query.</p>
+      <p><strong>Verdict:</strong> confirmed.</p>
+
+      <h3>#16 — Stripe flow has no webhook</h3>
+      <pre><code>const session = await stripe.checkout.sessions.create({
+  line_items,
+  mode: "payment",
+  success_url: `${frontend_url}/verify?success=true&amp;orderId=${newOrder._id}`,
+  cancel_url:  `${frontend_url}/verify?success=false&amp;orderId=${newOrder._id}`,
+});</code></pre>
+      <p>Order state is driven by the browser hitting <code>/verify</code>. If the user closes the tab after paying, <code>payment: true</code> is never set. If the user manually visits <code>/verify?success=true&amp;orderId=xyz</code>, an unpaid order is marked paid.</p>
+      <p><strong>Verdict:</strong> confirmed. Correct fix is a signature-verified webhook at <code>/api/webhooks/stripe</code> (Phase 6).</p>
+    </section>
+
+    <section id="extra">
+      <h2><span class="num">6</span> Additional Findings — Beyond the Inventory</h2>
+      <p>Two extra issues surfaced during the audit pass. Neither was in the original brief.</p>
+
+      <h3>A — <code>userController.registerUser</code> trusts bcrypt in the wrong order</h3>
+      <pre><code>const salt = await bcrypt.genSalt(10);
+const hashedpassword = await bcrypt.hash(password, salt);</code></pre>
+      <p>This works, but it's duplicated in <code>adminController.setupFirstAdmin</code> with the same code. When the app moves to Next.js, this pattern collapses into one <code>hashPassword()</code> helper — otherwise password policies drift between the two call sites. Recorded for Phase 3.</p>
+
+      <h3>B — <code>adminController.adminLogin</code> leaks whether an email exists</h3>
+      <table>
+        <thead><tr><th>Case</th><th>Response</th></tr></thead>
+        <tbody>
+          <tr><td>Email not found</td><td><code>{ success: false, message: "User Not Found" }</code></td></tr>
+          <tr><td>Email exists, not admin</td><td><code>{ success: false, message: "User Not an Admin" }</code></td></tr>
+          <tr><td>Email exists, admin, wrong password</td><td><code>{ success: false, message: "Invalid Password" }</code></td></tr>
+        </tbody>
+      </table>
+      <p>Three distinct messages → an attacker can enumerate valid emails and privileged accounts by reading the response text. The Phase 3 fix is the standard pattern: one generic error for all failure modes.</p>
+      <div class="callout success">
+        <strong>Not in the original inventory</strong>
+        Fixing this in the new build is not “scope creep” — it's a free improvement because the login flow is being rewritten anyway.
+      </div>
+    </section>
+
+    <section id="decision">
+      <h2><span class="num">7</span> Architectural Decisions</h2>
+
+      <h3>7.1 — A new sibling folder, not a rename</h3>
+      <p><code>shop/</code> sits next to <code>front/</code>, <code>back/</code>, and <code>admin/</code>. Nothing in the legacy trees is modified. The reference implementation stays runnable until the new app fully replaces it.</p>
+      <table>
+        <thead><tr><th>Alternative</th><th>Rejected because</th></tr></thead>
+        <tbody>
+          <tr><td>Rename <code>front/</code> → <code>shop/</code></td><td>Destroys the reference; forces a hard cutover mid-project</td></tr>
+          <tr><td>Monorepo with workspaces</td><td>Adds complexity with zero payoff for a single-app rewrite</td></tr>
+          <tr><td>Subfolder of the legacy repo</td><td>Mixes histories; git blame becomes unusable</td></tr>
+        </tbody>
+      </table>
+
+      <h3>7.2 — Fresh git repository</h3>
+      <p><code>shop/</code> gets its own <code>.git</code>. The legacy repo's history includes committed <code>.env</code> files (#7) — separating the histories means those secrets never appear in the new repo's blame, logs, or commit graph.</p>
+
+      <h3>7.3 — Neon from day one (no SQLite stopover)</h3>
+      <p>The earlier Lumière build started on SQLite and migrated later. That migration produced five distinct deployment errors — the pattern is well understood now, and there is nothing to gain from repeating it. Using Neon from Phase 1 means Phase 1's <code>schema.prisma</code> is identical to Phase 10's, minus the models.</p>
+
+      <h3>7.4 — Webpack, not Turbopack</h3>
+      <p><code>PrismaPlugin</code> is a webpack plugin. Any project that uses it must build with Webpack. Rather than fight this later, the <code>--webpack</code> flag is added to both <code>dev</code> and <code>build</code> in Phase 1's <code>package.json</code> — this is the same decision made after five errors on Lumière, now applied preemptively.</p>
+    </section>
+
+    <section id="stack">
+      <h2><span class="num">8</span> Stack &amp; Tooling</h2>
+      <table>
+        <thead><tr><th>Layer</th><th>Choice</th><th>Why this, not the alternative</th></tr></thead>
+        <tbody>
+          <tr><td>Framework</td><td>Next.js 16 (App Router)</td><td>Proven in the Lumière build; single codebase replaces <code>front/</code> + <code>admin/</code> + <code>back/</code></td></tr>
+          <tr><td>Language</td><td>TypeScript 5</td><td>End-to-end type safety from Prisma → services → UI</td></tr>
+          <tr><td>Database</td><td>Neon PostgreSQL (from day one)</td><td>Serverless Postgres; avoids the SQLite → Postgres migration the Lumière build paid for</td></tr>
+          <tr><td>ORM</td><td>Prisma 6 (<code>prisma-client-js</code>)</td><td><code>prisma-client</code> generator fails to bundle the query engine on Vercel — verified in Lumière Phase 9</td></tr>
+          <tr><td>Styling</td><td>Tailwind CSS 4</td><td>Same version as Lumière; zero-dependency utility CSS</td></tr>
+          <tr><td>Linting</td><td>ESLint 9 + <code>eslint-config-next</code></td><td>Default in <code>create-next-app</code>; the modern flat config</td></tr>
+          <tr><td>Formatting</td><td>Prettier 3 + <code>prettier-plugin-tailwindcss</code></td><td>Deterministic class ordering, zero bikeshedding</td></tr>
+          <tr><td>Git hooks</td><td>Husky 9 + lint-staged 15</td><td>Pre-commit lint + format on changed files only</td></tr>
+          <tr><td>TypeScript runner</td><td>tsx</td><td>Required for the <code>predev</code>/<code>prebuild</code> image-generation script</td></tr>
+        </tbody>
+      </table>
+      <div class="callout info">
+        <strong>Deferred to later phases</strong>
+        Auth.js v5 (Phase 3), Zod 4 (Phase 3), next-intl v4 (Phase 9), Stripe (Phase 6), Resend + React Email (Phase 9), Recharts (Phase 8), Vitest + Playwright (Phase 10). Installing them in Phase 1 would ship unused code.
+      </div>
+    </section>
+
+    <section id="scaffold">
+      <h2><span class="num">9</span> Scaffolding Steps</h2>
+      <p>Full step list lives in the phase's companion document. The high-level order:</p>
+      <ol>
+        <li><code>npx create-next-app@latest shop</code> from the parent directory — TypeScript, Tailwind, <code>src/</code>, App Router, no Turbopack.</li>
+        <li>Pin Prisma to 6.x if the scaffolder pulled an RC (the Lumière gotcha).</li>
+        <li>Install supporting tooling: Prettier, Husky, lint-staged, tsx, dotenv, <code>@prisma/nextjs-monorepo-workaround-plugin</code>.</li>
+        <li><code>npx prisma init --datasource-provider postgresql</code>, then replace the generated schema with the Phase-1 skeleton.</li>
+        <li>Write <code>prisma.config.ts</code> with a CI-safe fallback URL.</li>
+        <li>Add <code>src/lib/prisma.ts</code> — hot-reload-safe singleton.</li>
+        <li>Wire <code>PrismaPlugin</code> into <code>next.config.ts</code>.</li>
+        <li>Add <code>scripts/generate-local-images.ts</code> and its <code>predev</code>/<code>prebuild</code> hooks.</li>
+        <li>Add <code>--webpack</code> to <code>dev</code> and <code>build</code>.</li>
+        <li>Husky + lint-staged wired to a pre-commit hook.</li>
+        <li>Extend <code>.gitignore</code>; create <code>.env</code> and <code>.env.example</code>.</li>
+        <li>Green build, silent typecheck, initial commit.</li>
+      </ol>
+    </section>
+
+    <section id="structure">
+      <h2><span class="num">10</span> Folder Structure (after Phase 1)</h2>
+      <div class="filetree">
+        <div><span class="dir">shop/</span></div>
+        <div class="indent-1"><span class="file">.env</span> <span class="note">← gitignored, real Neon URLs</span></div>
+        <div class="indent-1"><span class="file new">.env.example</span></div>
+        <div class="indent-1"><span class="file">.gitignore</span></div>
+        <div class="indent-1"><span class="file">.prettierignore</span> <span class="file new">.prettierrc</span></div>
+        <div class="indent-1"><span class="dir new">.husky/</span></div>
+        <div class="indent-2"><span class="file new">pre-commit</span></div>
+        <div class="indent-1"><span class="file">eslint.config.mjs</span></div>
+        <div class="indent-1"><span class="file new">lint-staged.config.mjs</span></div>
+        <div class="indent-1"><span class="file">next.config.ts</span> <span class="note">← PrismaPlugin wired</span></div>
+        <div class="indent-1"><span class="file">package.json</span> <span class="note">← --webpack, predev, postinstall</span></div>
+        <div class="indent-1"><span class="dir">prisma/</span></div>
+        <div class="indent-2"><span class="file">schema.prisma</span> <span class="note">← generator + datasource only</span></div>
+        <div class="indent-1"><span class="file new">prisma.config.ts</span></div>
+        <div class="indent-1"><span class="dir">public/</span></div>
+        <div class="indent-2"><span class="dir new">products/</span></div>
+        <div class="indent-3"><span class="file new">.gitkeep</span></div>
+        <div class="indent-1"><span class="dir new">scripts/</span></div>
+        <div class="indent-2"><span class="file new">generate-local-images.ts</span></div>
+        <div class="indent-1"><span class="dir">src/</span></div>
+        <div class="indent-2"><span class="dir">app/</span> <span class="note">← default create-next-app pages</span></div>
+        <div class="indent-2"><span class="dir">lib/</span></div>
+        <div class="indent-3"><span class="file new">prisma.ts</span></div>
+      </div>
+      <p>Phase 2 adds all models to <code>schema.prisma</code> and runs the first migration. Phase 3 adds <code>src/auth.ts</code>, <code>src/auth.config.ts</code>, and the <code>(auth)</code> route group. Phase 4 adds <code>(shop)/</code>. Nothing here is speculative — every folder exists because a specific phase will fill it.</p>
+    </section>
+
+    <section id="config">
+      <h2><span class="num">11</span> Key Config Files (Highlights)</h2>
+
+      <h3>schema.prisma — Phase 1 skeleton</h3>
+      <pre><code>generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}</code></pre>
+      <p>Two deliberate choices: <code>prisma-client-js</code> (not <code>prisma-client</code>) and the RHEL binary target. Both were learned the hard way in Lumière Phase 9.</p>
+
+      <h3>package.json — scripts</h3>
+      <pre><code>"predev":     "tsx scripts/generate-local-images.ts",
+"prebuild":   "tsx scripts/generate-local-images.ts",
+"dev":        "next dev --webpack",
+"build":      "next build --webpack",
+"postinstall": "prisma generate",
+"prepare":    "husky"</code></pre>
+      <p>Every one of these lines maps to a specific failure mode paid for on the previous project.</p>
+
+      <h3>next.config.ts — PrismaPlugin</h3>
+      <pre><code>webpack: (config, { isServer }) =&gt; {
+  if (isServer) {
+    config.plugins = [...config.plugins, new PrismaPlugin()];
+  }
+  return config;
+}</code></pre>
+      <p>Server-only — the client bundle has no business touching Prisma.</p>
+    </section>
+
+    <section id="gotchas">
+      <h2><span class="num">12</span> Preempted Gotchas</h2>
+      <p>These are the exact five production errors the Lumière build hit after its first deploy, now baked into Phase 1 so they never fire on <code>shop/</code>.</p>
+      <table>
+        <thead><tr><th>#</th><th>Lum&egrave;re error</th><th>Phase 1 defence</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><code>Can't reach database server</code> during build (DB-driven pages prerendered)</td><td>Every page that queries Prisma will carry <code>export const dynamic = "force-dynamic"</code>. Recorded here; applied from Phase 4 when the first such page exists.</td></tr>
+          <tr><td>2</td><td>Missing TypeScript declaration for <code>@prisma/nextjs-monorepo-workaround-plugin</code></td><td>Add <code>src/types/prisma-plugin.d.ts</code> when the first <code>tsc</code> pass complains. Deferred to first actual typecheck run.</td></tr>
+          <tr><td>3</td><td>Turbopack rejects the Webpack config</td><td><code>--webpack</code> in both <code>dev</code> and <code>build</code> from day one.</td></tr>
+          <tr><td>4</td><td>Query engine missing on Vercel (<code>rhel-openssl-3.0.x</code>)</td><td><code>binaryTargets = ["native", "rhel-openssl-3.0.x"]</code> in the schema.</td></tr>
+          <tr><td>5</td><td>Neon pooler rejects serverless connections</td><td><code>.env.example</code> documents the direct endpoint explicitly.</td></tr>
+        </tbody>
+      </table>
+      <div class="callout warn">
+        <strong>Two items are deliberately deferred</strong>
+        #1 and #2 cannot be applied before the conditions that trigger them exist. They are pre-recorded so they don't get re-learned — but forcing them now would ship dead code.
+      </div>
+    </section>
+
+    <section id="verify">
+      <h2><span class="num">13</span> Verification</h2>
+      <table>
+        <thead><tr><th>Check</th><th>Command</th><th>Expected</th></tr></thead>
+        <tbody>
+          <tr><td>TypeScript</td><td><code>npx tsc --noEmit</code></td><td>Silent</td></tr>
+          <tr><td>ESLint</td><td><code>npx eslint .</code></td><td>Silent</td></tr>
+          <tr><td>Prettier</td><td><code>npx prettier --check .</code></td><td>Silent</td></tr>
+          <tr><td>Prisma schema</td><td><code>npx prisma validate</code></td><td>valid 🚀</td></tr>
+          <tr><td>Prisma client</td><td><code>npx prisma generate</code></td><td>Generated to <code>node_modules/@prisma/client</code></td></tr>
+          <tr><td>Local image script</td><td><code>npx tsx scripts/generate-local-images.ts</code></td><td><code>✅ Generated 0 product image reference(s)</code></td></tr>
+          <tr><td>Production build</td><td><code>npm run build</code></td><td>Green; <code>(webpack)</code> in the banner</td></tr>
+          <tr><td>Legacy untouched</td><td><code>ls ..</code> from <code>shop/</code></td><td>Four sibling folders, no modification</td></tr>
+          <tr><td>Git initialized</td><td><code>git log --oneline</code></td><td><code>&lt;hash&gt; Phase 1: scaffold + audit</code></td></tr>
+        </tbody>
+      </table>
+      <div class="callout success">
+        <strong>Phase 1 is done when</strong>
+        <code>npx tsc --noEmit</code> is silent <strong>and</strong> <code>npm run build</code> is green <strong>and</strong> the initial commit exists. No other condition matters.
+      </div>
+    </section>
+
+    <section id="summary">
+      <h2><span class="num">14</span> Summary</h2>
+      <h3>Audit — all 16 inventory items verified</h3>
+      <ul>
+        <li><strong>CRITICAL (3).</strong> Broken imports crash two public routes; admin order list is always empty; three files are dead placeholders.</li>
+        <li><strong>SECURITY (4).</strong> Login bypass with hardcoded credentials; a protected-route key that nothing writes; a public admin-claim endpoint; committed <code>.env</code> files; unrestricted Multer uploads.</li>
+        <li><strong>LOGIC (9).</strong> Two sources of truth; transient <code>$0</code> cart total; orphaned cart keys; ignored backend failure on cart mutations; no JWT expiry handling; no stock tracking; no duplicate-slug check; no Stripe webhook.</li>
+        <li><strong>Additional findings (2).</strong> Duplicated bcrypt code paths, and a user-enumeration leak in <code>adminLogin</code> (three distinct error messages).</li>
+      </ul>
+
+      <h3>Scaffold — everything needed for Phase 2</h3>
+      <ul>
+        <li>Next.js 16 + TypeScript 5 + Tailwind 4, App Router, <code>src/</code>, no Turbopack.</li>
+        <li>Prisma 6 pinned; schema with the RHEL binary target; <code>prisma.config.ts</code> with a CI-safe fallback.</li>
+        <li><code>--webpack</code> on <code>dev</code> and <code>build</code>; <code>postinstall: prisma generate</code>.</li>
+        <li><code>predev</code>/<code>prebuild</code> hooks calling the auto-generated image script.</li>
+        <li>Prettier + ESLint + Husky + lint-staged — pre-commit hook active.</li>
+        <li><code>src/lib/prisma.ts</code> — hot-reload-safe singleton.</li>
+        <li>Initial commit <code>Phase 1: scaffold + audit</code>.</li>
+      </ul>
+
+      <h3>Engineering outcomes</h3>
+      <ul>
+        <li>Every bug from the brief is confirmed with file-level evidence, not assumed.</li>
+        <li>The five Lumière deployment gotchas are pre-empted — three applied, two pre-recorded with the phase that triggers them.</li>
+        <li>The legacy trees stay runnable and unmodified.</li>
+        <li>Phase 2 can start with zero cleanup work: the only thing it will do is add models to <code>schema.prisma</code> and run the first migration.</li>
+      </ul>
+
+      <div class="callout info">
+        <strong>Ready for Phase 2 when confirmed</strong>
+        Phase 2 will define every model — User, Address, Category, Product, ProductVariant, ProductImage, CartItem, Order, OrderItem, Review, ReviewImage, Coupon, Wishlist, AuditLog, Setting — with relations, onDelete rules, and indexes. It will also seed 4 categories and 60 products with variants.
+      </div>
+    </section>
+
+    <nav class="footer-nav">
+      <span class="disabled">← Phase 0 (Planning)</span>
+      <span class="center">Phase 1 of 10</span>
+      <a href="phase-02-data-model.html">Phase 2 (Data Model) →</a>
+    </nav>
+  </main>
+</div>
+</body>
+</html>
+</file>
+
+<file path="public/products/.gitkeep">
+
+</file>
+
+<file path="scripts/generate-local-images.ts">
+// ═══════════════════════════════════════════════════
+// 🖼️  Generate Local Images List
+// ═══════════════════════════════════════════════════
+// Reads public/products/ at BUILD time and writes a typed
+// constant consumed by the admin image picker (Phase 8).
+//
+// Why build time: Vercel serves public/ from the CDN and
+// the serverless runtime cannot read it at request time.
+
+import { readdirSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
+import { join } from "node:path";
+
+const PRODUCTS_DIR = join(process.cwd(), "public", "products");
+const OUT_FILE = join(
+  process.cwd(),
+  "src",
+  "lib",
+  "constants",
+  "local-images.generated.ts"
+);
+
+const ALLOWED_EXTENSIONS = new Set([
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".webp",
+  ".avif",
+  ".gif",
+  ".svg",
+]);
+
+function main() {
+  if (!existsSync(PRODUCTS_DIR)) {
+    mkdirSync(PRODUCTS_DIR, { recursive: true });
+  }
+
+  const files = readdirSync(PRODUCTS_DIR)
+    .filter((name) => {
+      const dot = name.lastIndexOf(".");
+      if (dot === -1) return false;
+      return ALLOWED_EXTENSIONS.has(name.slice(dot).toLowerCase());
+    })
+    .sort();
+
+  const lines = files.map((n) => `  "/products/${n}",`).join("\n");
+
+  const content = `// ═══════════════════════════════════════════════════
+// 🖼️  Local Images (AUTO-GENERATED — do not edit manually)
+// ═══════════════════════════════════════════════════
+// Generated by scripts/generate-local-images.ts
+// Runs automatically before \`npm run dev\` and \`npm run build\`.
+//
+// To add new images: drop them in public/products/ and restart dev.
+
+export const LOCAL_IMAGES = [
+${lines}
+] as const;
+
+export type LocalImage = (typeof LOCAL_IMAGES)[number];
+`;
+
+  writeFileSync(OUT_FILE, content, "utf8");
+  console.log(
+    `✅ Generated ${files.length} product image reference(s) → src/lib/constants/local-images.generated.ts`
+  );
+}
+
+main();
+</file>
+
+<file path="src/lib/prisma.ts">
+// ═══════════════════════════════════════════════════
+// 🗄️ Prisma Client singleton
+// ═══════════════════════════════════════════════════
+// Prevents connection-pool exhaustion during `next dev` HMR.
+// In production, the module graph is only evaluated once,
+// so the cached instance is a no-op.
+
+import { PrismaClient } from "@prisma/client";
+
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
+
+export const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    log: ["error", "warn"],
+  });
+
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
+}
+</file>
+
+<file path=".prettierignore">
+.next
+node_modules
+out
+build
+public
+prisma/migrations
+src/lib/constants/local-images.generated.ts
+</file>
+
+<file path=".prettierrc">
+{
+  "semi": true,
+  "singleQuote": false,
+  "trailingComma": "es5",
+  "printWidth": 80,
+  "tabWidth": 2,
+  "plugins": ["prettier-plugin-tailwindcss"]
+}
+</file>
+
+<file path="lint-staged.config.mjs">
+export default {
+  "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+  "*.{json,css,md}": ["prettier --write"],
+};
+</file>
+
+<file path="prisma.config.ts">
+// ═══════════════════════════════════════════════════
+// ⚙️ Prisma 6 configuration
+// ═══════════════════════════════════════════════════
+// dotenv/config is required: Prisma 6 no longer auto-loads
+// .env when using prisma.config.ts.
+//
+// The fallback URL prevents `prisma generate` from failing
+// in CI where no real DATABASE_URL is provided.
+
+import "dotenv/config";
+import { defineConfig } from "prisma/config";
+
+const FALLBACK_URL =
+  "postgresql://placeholder:placeholder@localhost:5432/placeholder";
+
+export default defineConfig({
+  schema: "prisma/schema.prisma",
+  migrations: {
+    path: "prisma/migrations",
+  },
+  engine: "classic",
+  datasource: {
+    url: process.env.DATABASE_URL ?? FALLBACK_URL,
+  },
+});
+</file>
+
+<file path="repomix-output.txt">
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.husky/
+  pre-commit
+prisma/
+  schema.prisma
+public/
+  products/
+    .gitkeep
+  file.svg
+  globe.svg
+  next.svg
+  vercel.svg
+  window.svg
+scripts/
+  generate-local-images.ts
+src/
+  app/
+    favicon.ico
+    globals.css
+    layout.tsx
+    page.tsx
+  lib/
+    prisma.ts
+.gitignore
+.prettierignore
+.prettierrc
+eslint.config.mjs
+lint-staged.config.mjs
+next.config.ts
+package.json
+prisma.config.ts
+README.md
+tsconfig.json
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path=".husky/pre-commit">
+npx lint-staged
+</file>
+
+<file path="prisma/schema.prisma">
+// ═══════════════════════════════════════════════════
+// 🛒 shop/ — Prisma schema
+// ═══════════════════════════════════════════════════
+// Phase 1 ships ONLY the generator + datasource.
+// All models (User, Product, Order, etc.) land in Phase 2.
+//
+// Deployment notes (from the Lumière lessons):
+//   • prisma-client-js — NOT the newer `prisma-client` generator.
+//     Outputs to node_modules and is bundled correctly on Vercel.
+//   • binaryTargets — native (dev) + rhel-openssl-3.0.x (Vercel).
+//   • DATABASE_URL is the runtime connection (direct endpoint on Neon).
+//   • DIRECT_URL is used only by `prisma migrate`.
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+</file>
+
+<file path="public/products/.gitkeep">
+
+</file>
+
+<file path="scripts/generate-local-images.ts">
+// ═══════════════════════════════════════════════════
+// 🖼️  Generate Local Images List
+// ═══════════════════════════════════════════════════
+// Reads public/products/ at BUILD time and writes a typed
+// constant consumed by the admin image picker (Phase 8).
+//
+// Why build time: Vercel serves public/ from the CDN and
+// the serverless runtime cannot read it at request time.
+
+import { readdirSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
+import { join } from "node:path";
+
+const PRODUCTS_DIR = join(process.cwd(), "public", "products");
+const OUT_FILE = join(
+  process.cwd(),
+  "src",
+  "lib",
+  "constants",
+  "local-images.generated.ts"
+);
+
+const ALLOWED_EXTENSIONS = new Set([
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".webp",
+  ".avif",
+  ".gif",
+  ".svg",
+]);
+
+function main() {
+  if (!existsSync(PRODUCTS_DIR)) {
+    mkdirSync(PRODUCTS_DIR, { recursive: true });
+  }
+
+  const files = readdirSync(PRODUCTS_DIR)
+    .filter((name) => {
+      const dot = name.lastIndexOf(".");
+      if (dot === -1) return false;
+      return ALLOWED_EXTENSIONS.has(name.slice(dot).toLowerCase());
+    })
+    .sort();
+
+  const lines = files.map((n) => `  "/products/${n}",`).join("\n");
+
+  const content = `// ═══════════════════════════════════════════════════
+// 🖼️  Local Images (AUTO-GENERATED — do not edit manually)
+// ═══════════════════════════════════════════════════
+// Generated by scripts/generate-local-images.ts
+// Runs automatically before \`npm run dev\` and \`npm run build\`.
+//
+// To add new images: drop them in public/products/ and restart dev.
+
+export const LOCAL_IMAGES = [
+${lines}
+] as const;
+
+export type LocalImage = (typeof LOCAL_IMAGES)[number];
+`;
+
+  writeFileSync(OUT_FILE, content, "utf8");
+  console.log(
+    `✅ Generated ${files.length} product image reference(s) → src/lib/constants/local-images.generated.ts`
+  );
+}
+
+main();
+</file>
+
+<file path="src/lib/prisma.ts">
+// ═══════════════════════════════════════════════════
+// 🗄️ Prisma Client singleton
+// ═══════════════════════════════════════════════════
+// Prevents connection-pool exhaustion during `next dev` HMR.
+// In production, the module graph is only evaluated once,
+// so the cached instance is a no-op.
+
+import { PrismaClient } from "@prisma/client";
+
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
+
+export const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    log: ["error", "warn"],
+  });
+
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
+}
+</file>
+
+<file path=".prettierignore">
+.next
+node_modules
+out
+build
+public
+prisma/migrations
+src/lib/constants/local-images.generated.ts
+</file>
+
+<file path=".prettierrc">
+{
+  "semi": true,
+  "singleQuote": false,
+  "trailingComma": "es5",
+  "printWidth": 80,
+  "tabWidth": 2,
+  "plugins": ["prettier-plugin-tailwindcss"]
+}
+</file>
+
+<file path="lint-staged.config.mjs">
+export default {
+  "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+  "*.{json,css,md}": ["prettier --write"],
+};
+</file>
+
+<file path="prisma.config.ts">
+// ═══════════════════════════════════════════════════
+// ⚙️ Prisma 6 configuration
+// ═══════════════════════════════════════════════════
+// dotenv/config is required: Prisma 6 no longer auto-loads
+// .env when using prisma.config.ts.
+//
+// The fallback URL prevents `prisma generate` from failing
+// in CI where no real DATABASE_URL is provided.
+
+import "dotenv/config";
+import { defineConfig } from "prisma/config";
+
+const FALLBACK_URL =
+  "postgresql://placeholder:placeholder@localhost:5432/placeholder";
+
+export default defineConfig({
+  schema: "prisma/schema.prisma",
+  migrations: {
+    path: "prisma/migrations",
+  },
+  engine: "classic",
+  datasource: {
+    url: process.env.DATABASE_URL ?? FALLBACK_URL,
+  },
+});
+</file>
+
+<file path="public/file.svg">
+<svg fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 13.5V5.41a1 1 0 0 0-.3-.7L9.8.29A1 1 0 0 0 9.08 0H1.5v13.5A2.5 2.5 0 0 0 4 16h8a2.5 2.5 0 0 0 2.5-2.5m-1.5 0v-7H8v-5H3v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1M9.5 5V2.12L12.38 5zM5.13 5h-.62v1.25h2.12V5zm-.62 3h7.12v1.25H4.5zm.62 3h-.62v1.25h7.12V11z" clip-rule="evenodd" fill="#666" fill-rule="evenodd"/></svg>
+</file>
+
+<file path="public/globe.svg">
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><g clip-path="url(#a)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.27 14.1a6.5 6.5 0 0 0 3.67-3.45q-1.24.21-2.7.34-.31 1.83-.97 3.1M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.48-1.52a7 7 0 0 1-.96 0H7.5a4 4 0 0 1-.84-1.32q-.38-.89-.63-2.08a40 40 0 0 0 3.92 0q-.25 1.2-.63 2.08a4 4 0 0 1-.84 1.31zm2.94-4.76q1.66-.15 2.95-.43a7 7 0 0 0 0-2.58q-1.3-.27-2.95-.43a18 18 0 0 1 0 3.44m-1.27-3.54a17 17 0 0 1 0 3.64 39 39 0 0 1-4.3 0 17 17 0 0 1 0-3.64 39 39 0 0 1 4.3 0m1.1-1.17q1.45.13 2.69.34a6.5 6.5 0 0 0-3.67-3.44q.65 1.26.98 3.1M8.48 1.5l.01.02q.41.37.84 1.31.38.89.63 2.08a40 40 0 0 0-3.92 0q.25-1.2.63-2.08a4 4 0 0 1 .85-1.32 7 7 0 0 1 .96 0m-2.75.4a6.5 6.5 0 0 0-3.67 3.44 29 29 0 0 1 2.7-.34q.31-1.83.97-3.1M4.58 6.28q-1.66.16-2.95.43a7 7 0 0 0 0 2.58q1.3.27 2.95.43a18 18 0 0 1 0-3.44m.17 4.71q-1.45-.12-2.69-.34a6.5 6.5 0 0 0 3.67 3.44q-.65-1.27-.98-3.1" fill="#666"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h16v16H0z"/></clipPath></defs></svg>
+</file>
+
+<file path="public/next.svg">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 394 80"><path fill="#000" d="M262 0h68.5v12.7h-27.2v66.6h-13.6V12.7H262V0ZM149 0v12.7H94v20.4h44.3v12.6H94v21h55v12.6H80.5V0h68.7zm34.3 0h-17.8l63.8 79.4h17.9l-32-39.7 32-39.6h-17.9l-23 28.6-23-28.6zm18.3 56.7-9-11-27.1 33.7h17.8l18.3-22.7z"/><path fill="#000" d="M81 79.3 17 0H0v79.3h13.6V17l50.2 62.3H81Zm252.6-.4c-1 0-1.8-.4-2.5-1s-1.1-1.6-1.1-2.6.3-1.8 1-2.5 1.6-1 2.6-1 1.8.3 2.5 1a3.4 3.4 0 0 1 .6 4.3 3.7 3.7 0 0 1-3 1.8zm23.2-33.5h6v23.3c0 2.1-.4 4-1.3 5.5a9.1 9.1 0 0 1-3.8 3.5c-1.6.8-3.5 1.3-5.7 1.3-2 0-3.7-.4-5.3-1s-2.8-1.8-3.7-3.2c-.9-1.3-1.4-3-1.4-5h6c.1.8.3 1.6.7 2.2s1 1.2 1.6 1.5c.7.4 1.5.5 2.4.5 1 0 1.8-.2 2.4-.6a4 4 0 0 0 1.6-1.8c.3-.8.5-1.8.5-3V45.5zm30.9 9.1a4.4 4.4 0 0 0-2-3.3 7.5 7.5 0 0 0-4.3-1.1c-1.3 0-2.4.2-3.3.5-.9.4-1.6 1-2 1.6a3.5 3.5 0 0 0-.3 4c.3.5.7.9 1.3 1.2l1.8 1 2 .5 3.2.8c1.3.3 2.5.7 3.7 1.2a13 13 0 0 1 3.2 1.8 8.1 8.1 0 0 1 3 6.5c0 2-.5 3.7-1.5 5.1a10 10 0 0 1-4.4 3.5c-1.8.8-4.1 1.2-6.8 1.2-2.6 0-4.9-.4-6.8-1.2-2-.8-3.4-2-4.5-3.5a10 10 0 0 1-1.7-5.6h6a5 5 0 0 0 3.5 4.6c1 .4 2.2.6 3.4.6 1.3 0 2.5-.2 3.5-.6 1-.4 1.8-1 2.4-1.7a4 4 0 0 0 .8-2.4c0-.9-.2-1.6-.7-2.2a11 11 0 0 0-2.1-1.4l-3.2-1-3.8-1c-2.8-.7-5-1.7-6.6-3.2a7.2 7.2 0 0 1-2.4-5.7 8 8 0 0 1 1.7-5 10 10 0 0 1 4.3-3.5c2-.8 4-1.2 6.4-1.2 2.3 0 4.4.4 6.2 1.2 1.8.8 3.2 2 4.3 3.4 1 1.4 1.5 3 1.5 5h-5.8z"/></svg>
+</file>
+
+<file path="public/vercel.svg">
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1155 1000"><path d="m577.3 0 577.4 1000H0z" fill="#fff"/></svg>
+</file>
+
+<file path="public/window.svg">
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 2.5h13v10a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1zM0 1h16v11.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 0 12.5zm3.75 4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5M7 4.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m1.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5" fill="#666"/></svg>
+</file>
+
+<file path="src/app/globals.css">
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+</file>
+
+<file path="src/app/layout.tsx">
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "Create Next App",
+  description: "Generated by create next app",
+};
+
+export default function RootLayout({ children }: LayoutProps<"/">) {
+  return (
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col">{children}</body>
+    </html>
+  );
+}
+</file>
+
+<file path="src/app/page.tsx">
+import Image from "next/image";
+
+export default function Home() {
+  return (
+    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+        <Image
+          className="dark:invert h-5 w-[100px]"
+          src="/next.svg"
+          alt="Next.js logo"
+          width={100}
+          height={20}
+          priority
+        />
+        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
+          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
+            To get started, edit the{" "}
+            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
+              page.tsx
+            </code>{" "}
+            file.
+          </h1>
+          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+            Looking for a starting point or more instructions? Head over to{" "}
+            <a
+              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+              className="font-medium text-zinc-950 dark:text-zinc-50"
+            >
+              Templates
+            </a>{" "}
+            or the{" "}
+            <a
+              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+              className="font-medium text-zinc-950 dark:text-zinc-50"
+            >
+              Learning
+            </a>{" "}
+            center.
+          </p>
+        </div>
+        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
+          <a
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
+            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              className="dark:invert h-[14px] w-4"
+              src="/vercel.svg"
+              alt="Vercel logomark"
+              width={16}
+              height={14}
+            />
+            Deploy Now
+          </a>
+          <a
+            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
+            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Documentation
+          </a>
+        </div>
+      </main>
+    </div>
+  );
+}
+</file>
+
+<file path=".gitignore">
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+/src/generated/prisma
+
+# ─── shop/ project additions ───
+# Product images are .gitignored except for the placeholder.
+# (60 legacy product images get copied in later; they're large binaries.)
+/public/products/*
+!/public/products/.gitkeep
+
+# Auto-generated image index
+/src/lib/constants/local-images.generated.ts
+</file>
+
+<file path="eslint.config.mjs">
+import { defineConfig, globalIgnores } from "eslint/config";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
+
+const eslintConfig = defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  // Override default ignores of eslint-config-next.
+  globalIgnores([
+    // Default ignores of eslint-config-next:
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+  ]),
+]);
+
+export default eslintConfig;
+</file>
+
+<file path="next.config.ts">
+import type { NextConfig } from "next";
+import { PrismaPlugin } from "@prisma/nextjs-monorepo-workaround-plugin";
+
+const nextConfig: NextConfig = {
+  // PrismaPlugin must be applied to the server bundle only.
+  // Requires Webpack — hence the `--webpack` flags in package.json.
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.plugins = [...config.plugins, new PrismaPlugin()];
+    }
+    return config;
+  },
+
+  // Remote image hosts used by later phases (Unsplash hero,
+  // flag CDN for the language switcher in Phase 9).
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "flagcdn.com" },
+    ],
+  },
+};
+
+export default nextConfig;
+</file>
+
+<file path="package.json">
+{
+  "name": "e-shop",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "predev": "tsx scripts/generate-local-images.ts",
+    "prebuild": "tsx scripts/generate-local-images.ts",
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
+    "start": "next start",
+    "lint": "eslint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "next": "16.4.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@prisma/nextjs-monorepo-workaround-plugin": "^7.10.1",
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "dotenv": "^18.0.8",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.2",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "prisma": "^6.19.3",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
+  }
+}
+</file>
+
+<file path="README.md">
+# e-shop/
+
+A Next.js 16 e-commerce app — the production rewrite of a legacy MERN
+storefront (kept in `../front`, `../admin`, `../back` as reference).
+
+**Status:** Phase 1 complete — scaffold + audit.
+
+## Stack
+
+Next.js 16 (App Router) · TypeScript · Prisma 6 · Neon PostgreSQL ·
+Tailwind CSS 4 · Vercel
+
+## Getting started
+
+```bash
+cp .env.example .env      # fill in Neon DATABASE_URL + DIRECT_URL
+npm install
+npm run dev
+</file>
+
+<file path="tsconfig.json">
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
+  "exclude": ["node_modules"]
+}
+</file>
+
+</files>
+</file>
+
+<file path="public/file.svg">
+<svg fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 13.5V5.41a1 1 0 0 0-.3-.7L9.8.29A1 1 0 0 0 9.08 0H1.5v13.5A2.5 2.5 0 0 0 4 16h8a2.5 2.5 0 0 0 2.5-2.5m-1.5 0v-7H8v-5H3v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1M9.5 5V2.12L12.38 5zM5.13 5h-.62v1.25h2.12V5zm-.62 3h7.12v1.25H4.5zm.62 3h-.62v1.25h7.12V11z" clip-rule="evenodd" fill="#666" fill-rule="evenodd"/></svg>
+</file>
+
+<file path="public/globe.svg">
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><g clip-path="url(#a)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.27 14.1a6.5 6.5 0 0 0 3.67-3.45q-1.24.21-2.7.34-.31 1.83-.97 3.1M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.48-1.52a7 7 0 0 1-.96 0H7.5a4 4 0 0 1-.84-1.32q-.38-.89-.63-2.08a40 40 0 0 0 3.92 0q-.25 1.2-.63 2.08a4 4 0 0 1-.84 1.31zm2.94-4.76q1.66-.15 2.95-.43a7 7 0 0 0 0-2.58q-1.3-.27-2.95-.43a18 18 0 0 1 0 3.44m-1.27-3.54a17 17 0 0 1 0 3.64 39 39 0 0 1-4.3 0 17 17 0 0 1 0-3.64 39 39 0 0 1 4.3 0m1.1-1.17q1.45.13 2.69.34a6.5 6.5 0 0 0-3.67-3.44q.65 1.26.98 3.1M8.48 1.5l.01.02q.41.37.84 1.31.38.89.63 2.08a40 40 0 0 0-3.92 0q.25-1.2.63-2.08a4 4 0 0 1 .85-1.32 7 7 0 0 1 .96 0m-2.75.4a6.5 6.5 0 0 0-3.67 3.44 29 29 0 0 1 2.7-.34q.31-1.83.97-3.1M4.58 6.28q-1.66.16-2.95.43a7 7 0 0 0 0 2.58q1.3.27 2.95.43a18 18 0 0 1 0-3.44m.17 4.71q-1.45-.12-2.69-.34a6.5 6.5 0 0 0 3.67 3.44q-.65-1.27-.98-3.1" fill="#666"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h16v16H0z"/></clipPath></defs></svg>
+</file>
+
+<file path="public/next.svg">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 394 80"><path fill="#000" d="M262 0h68.5v12.7h-27.2v66.6h-13.6V12.7H262V0ZM149 0v12.7H94v20.4h44.3v12.6H94v21h55v12.6H80.5V0h68.7zm34.3 0h-17.8l63.8 79.4h17.9l-32-39.7 32-39.6h-17.9l-23 28.6-23-28.6zm18.3 56.7-9-11-27.1 33.7h17.8l18.3-22.7z"/><path fill="#000" d="M81 79.3 17 0H0v79.3h13.6V17l50.2 62.3H81Zm252.6-.4c-1 0-1.8-.4-2.5-1s-1.1-1.6-1.1-2.6.3-1.8 1-2.5 1.6-1 2.6-1 1.8.3 2.5 1a3.4 3.4 0 0 1 .6 4.3 3.7 3.7 0 0 1-3 1.8zm23.2-33.5h6v23.3c0 2.1-.4 4-1.3 5.5a9.1 9.1 0 0 1-3.8 3.5c-1.6.8-3.5 1.3-5.7 1.3-2 0-3.7-.4-5.3-1s-2.8-1.8-3.7-3.2c-.9-1.3-1.4-3-1.4-5h6c.1.8.3 1.6.7 2.2s1 1.2 1.6 1.5c.7.4 1.5.5 2.4.5 1 0 1.8-.2 2.4-.6a4 4 0 0 0 1.6-1.8c.3-.8.5-1.8.5-3V45.5zm30.9 9.1a4.4 4.4 0 0 0-2-3.3 7.5 7.5 0 0 0-4.3-1.1c-1.3 0-2.4.2-3.3.5-.9.4-1.6 1-2 1.6a3.5 3.5 0 0 0-.3 4c.3.5.7.9 1.3 1.2l1.8 1 2 .5 3.2.8c1.3.3 2.5.7 3.7 1.2a13 13 0 0 1 3.2 1.8 8.1 8.1 0 0 1 3 6.5c0 2-.5 3.7-1.5 5.1a10 10 0 0 1-4.4 3.5c-1.8.8-4.1 1.2-6.8 1.2-2.6 0-4.9-.4-6.8-1.2-2-.8-3.4-2-4.5-3.5a10 10 0 0 1-1.7-5.6h6a5 5 0 0 0 3.5 4.6c1 .4 2.2.6 3.4.6 1.3 0 2.5-.2 3.5-.6 1-.4 1.8-1 2.4-1.7a4 4 0 0 0 .8-2.4c0-.9-.2-1.6-.7-2.2a11 11 0 0 0-2.1-1.4l-3.2-1-3.8-1c-2.8-.7-5-1.7-6.6-3.2a7.2 7.2 0 0 1-2.4-5.7 8 8 0 0 1 1.7-5 10 10 0 0 1 4.3-3.5c2-.8 4-1.2 6.4-1.2 2.3 0 4.4.4 6.2 1.2 1.8.8 3.2 2 4.3 3.4 1 1.4 1.5 3 1.5 5h-5.8z"/></svg>
+</file>
+
+<file path="public/vercel.svg">
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1155 1000"><path d="m577.3 0 577.4 1000H0z" fill="#fff"/></svg>
+</file>
+
+<file path="public/window.svg">
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 2.5h13v10a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1zM0 1h16v11.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 0 12.5zm3.75 4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5M7 4.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m1.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5" fill="#666"/></svg>
+</file>
+
+<file path="src/app/globals.css">
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+</file>
+
+<file path="src/app/layout.tsx">
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "Create Next App",
+  description: "Generated by create next app",
+};
+
+export default function RootLayout({ children }: LayoutProps<"/">) {
+  return (
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col">{children}</body>
+    </html>
+  );
+}
+</file>
+
+<file path="src/app/page.tsx">
+import Image from "next/image";
+
+export default function Home() {
+  return (
+    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+        <Image
+          className="dark:invert h-5 w-[100px]"
+          src="/next.svg"
+          alt="Next.js logo"
+          width={100}
+          height={20}
+          priority
+        />
+        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
+          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
+            To get started, edit the{" "}
+            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
+              page.tsx
+            </code>{" "}
+            file.
+          </h1>
+          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+            Looking for a starting point or more instructions? Head over to{" "}
+            <a
+              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+              className="font-medium text-zinc-950 dark:text-zinc-50"
+            >
+              Templates
+            </a>{" "}
+            or the{" "}
+            <a
+              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+              className="font-medium text-zinc-950 dark:text-zinc-50"
+            >
+              Learning
+            </a>{" "}
+            center.
+          </p>
+        </div>
+        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
+          <a
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
+            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              className="dark:invert h-[14px] w-4"
+              src="/vercel.svg"
+              alt="Vercel logomark"
+              width={16}
+              height={14}
+            />
+            Deploy Now
+          </a>
+          <a
+            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
+            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Documentation
+          </a>
+        </div>
+      </main>
+    </div>
+  );
+}
+</file>
+
+<file path=".gitignore">
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+/src/generated/prisma
+
+# ─── shop/ project additions ───
+# Product images are .gitignored except for the placeholder.
+# (60 legacy product images get copied in later; they're large binaries.)
+/public/products/*
+!/public/products/.gitkeep
+
+# Auto-generated image index
+/src/lib/constants/local-images.generated.ts
+</file>
+
+<file path="eslint.config.mjs">
+import { defineConfig, globalIgnores } from "eslint/config";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
+
+const eslintConfig = defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  // Override default ignores of eslint-config-next.
+  globalIgnores([
+    // Default ignores of eslint-config-next:
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+  ]),
+]);
+
+export default eslintConfig;
+</file>
+
+<file path="next.config.ts">
+import type { NextConfig } from "next";
+import { PrismaPlugin } from "@prisma/nextjs-monorepo-workaround-plugin";
+
+const nextConfig: NextConfig = {
+  // PrismaPlugin must be applied to the server bundle only.
+  // Requires Webpack — hence the `--webpack` flags in package.json.
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.plugins = [...config.plugins, new PrismaPlugin()];
+    }
+    return config;
+  },
+
+  // Remote image hosts used by later phases (Unsplash hero,
+  // flag CDN for the language switcher in Phase 9).
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "flagcdn.com" },
+    ],
+  },
+};
+
+export default nextConfig;
+</file>
+
+<file path="package.json">
+{
+  "name": "e-shop",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "predev": "tsx scripts/generate-local-images.ts",
+    "prebuild": "tsx scripts/generate-local-images.ts",
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
+    "start": "next start",
+    "lint": "eslint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "next": "16.4.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@prisma/nextjs-monorepo-workaround-plugin": "^7.10.1",
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "dotenv": "^18.0.8",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.2",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "prisma": "^6.19.3",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
+  }
+}
+</file>
+
+<file path="README.md">
+# e-shop/
+
+A Next.js 16 e-commerce app — the production rewrite of a legacy MERN
+storefront (kept in `../front`, `../admin`, `../back` as reference).
+
+**Status:** Phase 1 complete — scaffold + audit.
+
+## Stack
+
+Next.js 16 (App Router) · TypeScript · Prisma 6 · Neon PostgreSQL ·
+Tailwind CSS 4 · Vercel
+
+## Getting started
+
+```bash
+cp .env.example .env      # fill in Neon DATABASE_URL + DIRECT_URL
+npm install
+npm run dev
+</file>
+
+<file path="tsconfig.json">
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
+  "exclude": ["node_modules"]
+}
+</file>
+
+</files>
