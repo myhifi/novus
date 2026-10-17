@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+._*
 
 # debug
 npm-debug.log*
@@ -42,9 +43,6 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
-
-# ─── shop/ project additions ───
-
 
 # Auto-generated image index
 /src/lib/constants/local-images.generated.ts
